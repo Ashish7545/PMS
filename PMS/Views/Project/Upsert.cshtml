@@ -1,0 +1,49 @@
+﻿@model Project
+
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+    <input hidden asp-for="Id" />
+    <div class="new-container row">
+        <div class="col-12">
+            <div class="p-3 mt-4 row">
+                <div class="col-12 pb-2">
+                    <h2 class="text-primary fw-bold">@(Model.Id != 0 ? "Update" : "Add") Project Details</h2>
+                </div>
+                <hr />
+                @*<div asp-validation-summary="All "></div>*@
+                <div class="mb-3 col-6">
+                    <label asp-for="ProjectName"></label>
+                    <input asp-for="ProjectName" class="form-control" />
+                    <span asp-validation-for="ProjectName" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="ProjectDetail"></label>
+                    <input asp-for="ProjectDetail" class="form-control"></input>
+                    <span asp-validation-for="ProjectDetail" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="DeadlineDate"></label>
+                    <input asp-for="DeadlineDate" class=" form-control"></input>
+                    <span asp-validation-for="DeadlineDate" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    @if (Model.Id != 0)
+                    {
+                        <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
+                    }
+                    else
+                    {
+                        <button type="submit" onclick="return ValidateInput()" class="btn btn-primary" style="width:150px">Create</button>
+                    }
+                    <a asp-controller="Project" asp-action="Index" class="btn btn-secondary" style="width:150px">Back to List</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

@@ -1,0 +1,145 @@
+﻿@using PMS.Pagging;
+@model List<Employee>
+@{
+    ViewData["Title"] = "Index";
+
+    Pager pager = new Pager();
+    int pageNo = 0;
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
+<div class="new-container">
+    <div class="p-3">
+        <div class="row pt-3">
+            <div class="col-4">
+                <h2 class="text-dark"><b>Employee Details</b></h2>
+            </div>
+            <div class="col-4">
+                <form method="get" asp-controller="Employee" asp-action="Index" class="d-flex">
+                    <input class="form-control me-sm-2" type="text" placeholder="Search by Employee Name..." name="SearchString" value="@ViewBag.SearchStr">
+                    <button class="btn btn-secondary my-2 my-sm-0 me-sm-2" type="submit">Search</button>
+                </form>
+            </div>
+            <div class=" col-4 text-end">
+                <div>
+                    <a asp-controller="Employee" asp-action="ExportExcel" class="btn btn-primary">
+                        <i class="bi bi-person-plus-fill"></i> &nbsp; Import Excel
+                    </a>
+                    <a asp-controller="Employee" asp-action="Upsert" class="btn btn-primary">
+                        <i class="bi bi-person-plus-fill"></i> &nbsp; Add Employee
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <table id="myTable" class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr class="text-center">
+                <th><a asp-action="Index" asp-route-sortOrder="@ViewData["NameOrder"]" class="text-decoration-none">Name</a></th>
+                <th>Employee Code</th>
+                <th>Joining Date</th>
+                <th>Employee Type</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model)
+            {
+                <tr class="text-center">
+                    <td>@obj.Name</td>
+                    <td>@obj.EmployeeCode</td>
+                    <td>@obj.JoiningDate</td>
+                    <td>@obj.EmployeeType</td>
+                    <td>
+                        <div class="w-60 btn-group" role="group">
+                            <a asp-area="" asp-controller="Employee" asp-action="Upsert" asp-route-id="@obj.Id"
+                           class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i></a>
+
+                            <a onclick="Delete('/Employee/Delete/@obj.Id')"
+                           class="btn btn-warning mx-2"><i class="bi bi-trash"></i></a>
+                        </div>
+
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@*Pagination*@
+<div class="container">
+    @if (pager.TotalPages > 0)
+    {
+        <ul class="pagination justify-content-center">
+            @if (pager.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new {pg = 1, SearchString = ViewBag.SearchStr})">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new {pg = pager.CurrentPage - 1, SearchString = ViewBag.SearchStr})">Previous</a>
+                </li>
+            }
+            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+            {
+                <li class="page-item @(pge == pager.CurrentPage ? "active": "")">
+                    <a class="page-link" href="@Url.Action("Index", new {pg = pge, SearchString = ViewBag.SearchStr})">@pge</a>
+                </li>
+            }
+            @if (pager.CurrentPage < pager.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new {pg = pager.CurrentPage + 1, SearchString = ViewBag.SearchStr})">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new {pg = pager.TotalPages, SearchString = ViewBag.SearchStr})">Last</a>
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        function Delete(url) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                type: "success"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        success: function () {
+                            if (data.success) {
+                                // Project deleted successfully, show success message
+                                Swal.fire("Deleted!", "Project Deleted Successfully!", "success");
+                                setTimeout(function () {
+                                    window.location.href = '/Employee/Index';
+                                }, 1500);
+                            } else {
+                                // Project deletion failed, show error message
+                                Swal.fire("Error!", "@TempData["error"]", "error");
+                            }
+                        }
+                    })
+                }
+            })
+        }
+    </script>
+}
