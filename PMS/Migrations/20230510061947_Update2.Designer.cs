@@ -11,8 +11,8 @@ using PMS.Data;
 namespace PMS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230509162537_Update1")]
-    partial class Update1
+    [Migration("20230510061947_Update2")]
+    partial class Update2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -59,10 +59,6 @@ namespace PMS.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ProjectManagerName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("ProjectName")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -84,7 +80,7 @@ namespace PMS.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("ProjectEmployee");
+                    b.ToTable("ProjectEmployees");
                 });
 
             modelBuilder.Entity("PMS.Models.ProjectEmployee", b =>

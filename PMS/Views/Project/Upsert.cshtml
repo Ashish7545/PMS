@@ -1,33 +1,42 @@
-﻿@model Project
+﻿@using PMS.ViewModels;
+@model ProjectVM
 
 <form method="post" asp-action="Upsert" enctype="multipart/form-data">
-    <input hidden asp-for="Id" />
-    <div class="new-container row">
-        <div class="col-12">
-            <div class="p-3 mt-4 row">
+    <input hidden asp-for="Projects.Id" />
+    <div class="container row justify-content-center">
+        <div class="col-6">
+            <div class="border p-3 mt-4 row">
                 <div class="col-12 pb-2">
-                    <h2 class="text-primary fw-bold">@(Model.Id != 0 ? "Update" : "Add") Project Details</h2>
+                    <h2 class="text-primary fw-bold">@(Model.Projects.Id != 0 ? "Update" : "Add") Project Details</h2>
                 </div>
                 <hr />
                 @*<div asp-validation-summary="All "></div>*@
                 <div class="mb-3 col-6">
-                    <label asp-for="ProjectName"></label>
-                    <input asp-for="ProjectName" class="form-control" />
-                    <span asp-validation-for="ProjectName" class="text-danger"></span>
+                    <label asp-for="Projects.ProjectName"></label>
+                    <input asp-for="Projects.ProjectName" class="form-control" />
+                    <span asp-validation-for="Projects.ProjectName" class="text-danger"></span>
                 </div>
                 <div class="mb-3 col-6">
-                    <label asp-for="ProjectDetail"></label>
-                    <input asp-for="ProjectDetail" class="form-control"></input>
-                    <span asp-validation-for="ProjectDetail" class="text-danger"></span>
+                    <label asp-for="Projects.ProjectDetail"></label>
+                    <input asp-for="Projects.ProjectDetail" class="form-control" />
+                    <span asp-validation-for="Projects.ProjectDetail" class="text-danger"></span>
                 </div>
-                <div class="mb-3">
-                    <label asp-for="DeadlineDate"></label>
-                    <input asp-for="DeadlineDate" class=" form-control"></input>
-                    <span asp-validation-for="DeadlineDate" class="text-danger"></span>
+                <div class="mb-3 col-6">
+                    <label asp-for="Projects.DeadlineDate"></label>
+                    <input asp-for="Projects.DeadlineDate" class=" form-control" />
+                    <span asp-validation-for="Projects.DeadlineDate" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Projects.EmployeeID"></label>
+                    <select asp-for="Projects.EmployeeID" asp-items="@Model.EmployeeList" class="form-select">
+
+                        <option disabled selected>--Select Category--</option>
+                    </select>
+                    <span asp-validation-for="Projects.EmployeeID" class="text-danger"></span>
                 </div>
 
                 <div class="col-12">
-                    @if (Model.Id != 0)
+                    @if (Model.Projects.Id != 0)
                     {
                         <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
                     }

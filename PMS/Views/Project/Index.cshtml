@@ -1,5 +1,6 @@
 ﻿@using PMS.Pagging;
-@model List<Project>
+@using PMS.ViewModels;
+@model List<ProjectVM>
 @{
     ViewData["Title"] = "Index";
 
@@ -12,7 +13,7 @@
     }
 }
 
-<div class="new-container">
+<div class="container">
     <div class="p-3">
         <div class="row pt-3">
             <div class="col-4">
@@ -27,7 +28,7 @@
             <div class=" col-4 text-end">
                 <div>
                     <a asp-controller="Project" asp-action="ExportExcel" class="btn btn-primary">
-                        <i class="bi bi-person-plus-fill"></i> &nbsp; Import Excel
+                         Import Excel
                     </a>
                     <a asp-controller="Project" asp-action="Upsert" class="btn btn-primary">
                         <i class="bi bi-person-plus-fill"></i> &nbsp; Add Project
@@ -43,7 +44,7 @@
                 <th><a asp-action="Index" asp-route-sortOrder="@ViewData["NameOrder"]" class="text-decoration-none">Project Name</a></th>
                 <th>Project Detail</th>
                 <th>Deadline Date</th>
-                <th>No of Employee</th>
+                <th>No. of Developer</th>
                 <th>List of Employee</th>
                 <th>Project Manager</th>
                 <th>Action</th>
@@ -56,8 +57,8 @@
                     <td>@obj.ProjectName</td>
                     <td>@obj.ProjectDetail</td>
                     <td>@obj.DeadlineDate</td>
-                    <td></td>
-                    <td><a asp-action="">Employee</a></td>
+                    <td>@obj.NoOfEmployee</td>
+                    <td><a asp-action="ListOfEmployee" asp-route-id="@obj.Id">Employee</a></td>
                     <td>@obj.ProjectManagerName</td>
                     <td>
                         <div class="w-60 btn-group" role="group">

@@ -12,7 +12,8 @@ namespace PMS.Data
         }
 
         public DbSet<Project> Projects { get; set; }
-    public DbSet<Employee> Employees { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<ProjectEmployee> ProjectEmployees { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -11,8 +11,8 @@ using PMS.Data;
 namespace PMS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230509162707_Update2")]
-    partial class Update2
+    [Migration("20230510042026_PMSMigration")]
+    partial class PMSMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

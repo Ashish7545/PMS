@@ -85,8 +85,18 @@ namespace PMS.Controllers
             }
             else
             {
-                _db.Employees.Update(obj);
-                TempData["success"] = "Product Updated successfully";
+                var empAssigned = _db.ProjectEmployees.FirstOrDefault(u => u.EmployeeId== obj.Id);
+                if(empAssigned != null)
+                {
+                    ViewBag.EmpType = new SelectList(Enum.GetValues(typeof(EmployeeType)));
+                    TempData["error"] = "Assigned User can not be Modified!";
+                    return View(obj);
+                }
+                else
+                {
+                    _db.Employees.Update(obj);
+                    TempData["success"] = "Product Updated successfully";
+                }
             }
             _db.SaveChanges();
 
@@ -115,7 +125,7 @@ namespace PMS.Controllers
 
 
             // Change filepath Accondingly
-            var filePath = "C:\\Users\\AshisH\\Desktop\\project.xlsx";
+            var filePath = "C:\\Users\\Ashish.Kumar\\OneDrive - Pacific Global Solutions Ltd\\Desktop\\project.xlsx";
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {

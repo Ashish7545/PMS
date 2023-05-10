@@ -7,28 +7,19 @@
 
 <form method="post" asp-action="AssignEmployees" enctype="multipart/form-data">
     <input hidden asp-for="ProjectId" />
-    <div class="new-container row">
-        <div class="col-12">
-            <div class="p-3 mt-4 row">
+    <div class="container row justify-content-center">
+        <div class="col-6">
+            <div class="border p-3 mt-4 row">
                 <div class="col-12 pb-2">
                     <h2>Assign Employees to @ViewBag.ProjectName</h2>
                 </div>
                 <hr />
-               @* <div class="col-6">
-                    <label asp-for="Developers" class="control-label">Employee</label>
+                <div class="col-12 mb-3">
+                    <label asp-for="Developers" class="control-label">Developers</label>
                     <select asp-for="Developers" asp-items="ViewBag.Developers" class="form-select" multiple>
-                        <option disabled selected>--Select Developers--</option>
+                        <option value="">--Select Developers--</option>
                     </select>
-                    <span asp-validation-for="Developers" class="text-danger"></span>
-                </div>*@
-                <div class="col-6">
-                    <label asp-for="ProjectManager" class="control-label"></label>
-                    <select asp-for="ProjectManager" asp-items="ViewBag.ProjectManager" class="form-select">
-                        <option value="">--Select Project Manager--</option>
-                    </select>
-                    <span asp-validation-for="ProjectManager" class="text-danger"></span>
                 </div>
-
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary" style="width:150px">Assign</button>
                     <a asp-controller="Project" asp-action="Index" class="btn btn-secondary" style="width:150px">Back to List</a>

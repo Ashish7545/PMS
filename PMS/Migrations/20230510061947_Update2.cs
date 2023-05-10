@@ -4,23 +4,23 @@
 
 namespace PMS.Migrations
 {
-    public partial class Update1 : Migration
+    public partial class Update2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "NoOfEmployee",
+                name: "ProjectManagerName",
                 table: "Projects");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "NoOfEmployee",
+            migrationBuilder.AddColumn<string>(
+                name: "ProjectManagerName",
                 table: "Projects",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+                type: "longtext",
+                nullable: true)
+                .Annotation("MySql:CharSet", "utf8mb4");
         }
     }
 }

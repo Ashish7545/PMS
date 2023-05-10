@@ -2,9 +2,9 @@
 
 <form method="post" asp-action="Upsert" enctype="multipart/form-data">
     <input hidden asp-for="Id" />
-    <div class="new-container row">
-        <div class="col-12">
-            <div class="p-3 mt-4 row">
+    <div class="container row justify-content-center">
+        <div class="col-6">
+            <div class="border p-3 mt-4 row">
                 <div class="col-12 pb-2">
                     <h2 class="text-primary fw-bold">@(Model.Id != 0 ? "Update" : "Add") Employee Details</h2>
                 </div>
