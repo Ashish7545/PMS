@@ -16,20 +16,22 @@
 <div class="container">
     <div class="p-3">
         <div class="row pt-3">
-            <div class="col-4">
-                <h2 class="text-dark"><b>List Of Employee</b></h2>
+            <div class="row col-12 mb-3">
+                <h2 class="text-dark"><b>List Of Employee in @ViewBag.ProjectName</b></h2>
             </div>
-            <div class="col-4">
-                <form method="get" asp-controller="Project" asp-action="ListOfEmployee" class="d-flex">
-                    <input class="form-control me-sm-2" type="text" placeholder="Search by Employee Name..." name="SearchString" value="@ViewBag.SearchStr">
-                    <button class="btn btn-secondary my-2 my-sm-0 me-sm-2" type="submit">Search</button>
-                </form>
-            </div>
-            <div class=" col-4 text-end">
-                <div>
-                    <a asp-controller="Project" asp-action="Index" class="btn btn-primary">
-                        Back
-                    </a>
+            <div class="row col-12">
+                <div class="col-6">
+                    <form method="get" asp-controller="Project" asp-action="ListOfEmployee" class="d-flex">
+                        <input class="form-control me-sm-2" type="text" placeholder="Search by Employee Name..." name="SearchString" value="@ViewBag.SearchStr">
+                        <button class="btn btn-secondary my-2 my-sm-0 me-sm-2" type="submit">Search</button>
+                    </form>
+                </div>
+                <div class=" col-6 text-end">
+                    <div>
+                        <a asp-controller="Project" asp-action="Index" class="btn btn-primary">
+                            Back to Projects List
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -38,8 +40,6 @@
     <table id="myTable" class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr class="text-center">
-                <th>Project Name</th>
-                <th>Deadline Date</th>
                 <th>Employee Name</th>
                 <th>Employee Code</th>
                 <th>Employee Type</th>
@@ -50,20 +50,18 @@
             @foreach (var obj in Model)
             {
                 <tr class="text-center">
-                    <td>@obj.ProjectName</td>
-                    <td>@obj.DeadlineDate</td>
                     <td>@obj.EmployeeName</td>
                     <td>@obj.EmployeeCode</td>
                     <td>@obj.EmployeeType</td>
                     <td>
                         <div class="w-60 btn-group" role="group">
-                            <a asp-area="" asp-controller="Project" asp-action="AssignEmployees" asp-route-id="@obj.ProjectId"
-                           class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> UnAssign Employee</a>
+                            <a onclick="Delete('/Project/UnAssignEmployee/@obj.ProjectId?eId=@obj.EmployeeId')"
+                           class="btn btn-warning mx-2"><i class="bi bi-pencil-square"></i> UnAssign Employee</a>
                         </div>
-
                     </td>
-
                 </tr>
+                <input type=hidden id="pId" name="projectId"
+                   value="@obj.ProjectId" />
             }
         </tbody>
     </table>
@@ -106,6 +104,41 @@
     @{
         <partial name="_ValidationScriptsPartial" />
     }
+    <script>
+        function Delete(url) {
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, unassigned it!',
+                type: "success"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        success: function (data) {
+                            if (data.success) {
+                                // Unassigned successfully, show success message
+                                Swal.fire("Removed!", "Employee UnAssigned Successfully!", "success");
+                                setTimeout(function () {
+                                    var id = document.getElementById('pId').value;
+                                    window.location.href = '/Project/ListOfEmployee/'+id+'';
+                                }, 1000);
+                            } else {
+                                // Project deletion failed, show error message
+                                Swal.fire("Error!", "@TempData["error"]", "error");
+                            }
+                        }
+                    })
+                }
+            })
+        }
+    </script>
 }
 
 

@@ -12,22 +12,22 @@
                 <hr />
                 @*<div asp-validation-summary="All "></div>*@
                 <div class="mb-3 col-6">
-                    <label asp-for="Projects.ProjectName"></label>
+                    <label asp-for="Projects.ProjectName">Project Name</label>
                     <input asp-for="Projects.ProjectName" class="form-control" />
                     <span asp-validation-for="Projects.ProjectName" class="text-danger"></span>
                 </div>
                 <div class="mb-3 col-6">
-                    <label asp-for="Projects.ProjectDetail"></label>
+                    <label asp-for="Projects.ProjectDetail">Project Detail</label>
                     <input asp-for="Projects.ProjectDetail" class="form-control" />
                     <span asp-validation-for="Projects.ProjectDetail" class="text-danger"></span>
                 </div>
                 <div class="mb-3 col-6">
-                    <label asp-for="Projects.DeadlineDate"></label>
+                    <label asp-for="Projects.DeadlineDate">Deadline Date</label>
                     <input asp-for="Projects.DeadlineDate" class=" form-control" />
                     <span asp-validation-for="Projects.DeadlineDate" class="text-danger"></span>
                 </div>
                 <div class="mb-3 col-6">
-                    <label asp-for="Projects.EmployeeID"></label>
+                    <label asp-for="Projects.EmployeeID">Project Manager</label>
                     <select asp-for="Projects.EmployeeID" asp-items="@Model.EmployeeList" class="form-select">
 
                         <option disabled selected>--Select Category--</option>

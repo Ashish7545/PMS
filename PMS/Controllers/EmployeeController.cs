@@ -26,8 +26,7 @@ namespace PMS.Controllers
             else
             {
                 ViewBag.SearchStr = searchString;
-                projectDetails = _db.Employees.Where(u => u.Name.ToLower().Contains(searchString.ToLower()) ||
-                                                      u.Name.ToLower().Contains(searchString.ToLower())).ToList();
+                projectDetails = _db.Employees.Where(u => u.Name.ToLower().Contains(searchString.ToLower())).ToList();
             }
 
             //Sorting
@@ -110,10 +109,17 @@ namespace PMS.Controllers
         public IActionResult Delete(int? id)
         {
             var obj = _db.Employees.FirstOrDefault(u => u.Id == id);
-
-            _db.Employees.Remove(obj);
-            _db.SaveChanges();
-
+            var obj1 = _db.Projects.Where(u => u.EmployeeID == id).FirstOrDefault();
+            if(obj1 != null)
+            {
+                TempData["error"] = "Employee is Assigned As Project Manager. Can't be deleted!";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                _db.Employees.Remove(obj);
+                _db.SaveChanges();
+            }
             return Json(new { success = true });
         }
         #endregion
@@ -122,10 +128,8 @@ namespace PMS.Controllers
         {
             List<Employee> emp = new List<Employee>();
 
-
-
             // Change filepath Accondingly
-            var filePath = "C:\\Users\\Ashish.Kumar\\OneDrive - Pacific Global Solutions Ltd\\Desktop\\project.xlsx";
+            var filePath = "C:\\Users\\Ashish.Kumar\\Downloads\\Report\\project.xlsx";
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {

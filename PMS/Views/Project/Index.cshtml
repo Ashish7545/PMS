@@ -133,13 +133,13 @@
                     $.ajax({
                         url: url,
                         type: 'DELETE',
-                        success: function () {
+                        success: function (data) {
                             if (data.success) {
                                 // Project deleted successfully, show success message
                                 Swal.fire("Deleted!", "Project Deleted Successfully!", "success");
                                 setTimeout(function () {
                                     window.location.href = '/Project/Index';
-                                }, 1500);
+                                }, 1000);
                             } else {
                                 // Project deletion failed, show error message
                                 Swal.fire("Error!", "@TempData["error"]", "error");

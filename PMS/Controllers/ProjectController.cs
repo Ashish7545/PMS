@@ -7,6 +7,7 @@ using PMS.Models;
 using PMS.Pagging;
 using PMS.ViewModels;
 using System.ComponentModel;
+using System.Composition;
 using LicenseContext = OfficeOpenXml.LicenseContext;
 
 namespace PMS.Controllers
@@ -44,8 +45,7 @@ namespace PMS.Controllers
             else
             {
                 ViewBag.SearchStr = searchString;
-                projectDetails = projectDetails.Where(u => u.ProjectName.ToLower().Contains(searchString.ToLower()) ||
-                                                      u.ProjectName.ToLower().Contains(searchString.ToLower())).ToList();
+                projectDetails = projectDetails.Where(u => u.ProjectName.ToLower().Contains(searchString.ToLower())).ToList();
             }
 
             //Sorting
@@ -127,6 +127,8 @@ namespace PMS.Controllers
             {
                 return NotFound();
             }
+            ViewBag.ProjectName = project.ProjectName;
+
             ViewBag.Developers = _db.Employees.Where(u => u.EmployeeType == EmployeeType.Developer)
                                           .Select(e => new SelectListItem { Value = e.Id.ToString(), Text = e.Name })
                                           .ToList();
@@ -165,8 +167,19 @@ namespace PMS.Controllers
                             EmployeeId = employee.Id,
                             ProjectId = project.Id
                         };
-
-                        _db.ProjectEmployees.Add(projectEmployee);
+                        var EmpId = _db.ProjectEmployees.Where(u => u.EmployeeId == employee.Id && u.ProjectId == project.Id).FirstOrDefault();
+                        if(EmpId != null)
+                        {
+                            TempData["error"] = "Employee Already Assigned to this project!";
+                            ViewBag.Developers = _db.Employees.Where(u => u.EmployeeType == EmployeeType.Developer)
+                                          .Select(e => new SelectListItem { Value = e.Id.ToString(), Text = e.Name })
+                                          .ToList();
+                            return View(model);
+                        }
+                        else
+                        {
+                            _db.ProjectEmployees.Add(projectEmployee);
+                        }
                     }
                 }
             }
@@ -180,26 +193,48 @@ namespace PMS.Controllers
             return RedirectToAction("Index");
         }
 
+    
 
 
-        public IActionResult ListOfEmployee(int? id)
+        public IActionResult ListOfEmployee(int? id, string? searchString, int pg = 1)
         {
             var empDetails = new List<AssignEmployeeVM>();
             empDetails = (from p in _db.Projects
                           join pe in _db.ProjectEmployees on p.Id equals pe.ProjectId
                           join e in _db.Employees on pe.EmployeeId equals e.Id
-                          
+                          where p.Id == id
                               select new AssignEmployeeVM
                               {
-                                  ProjectId = p.Id,
+                                  ProjectId = pe.ProjectId,
+                                  EmployeeId= pe.EmployeeId,
                                   ProjectName = p.ProjectName,
-                                  DeadlineDate = p.DeadlineDate.Date,
                                   EmployeeName = e.Name,
                                   EmployeeCode = e.EmployeeCode,
                                   EmployeeType = e.EmployeeType.ToString()
                               }).ToList();
             
-            return View(empDetails);
+            ViewBag.ProjectName = _db.Projects.First(u => u.Id == id).ProjectName;
+
+            if (searchString == null)
+            {
+                empDetails = empDetails;
+            }
+            else
+            {
+                ViewBag.SearchStr = searchString;
+                empDetails = empDetails.Where(u => u.EmployeeName.ToLower().Contains(searchString.ToLower())).ToList();
+            }
+            //Paging
+            const int pageSize = 3;
+            if (pg < 1)
+                pg = 1;
+            int recsCount = empDetails.Count;
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+            var data = empDetails.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewBag.Pager = pager;
+
+            return View(data);
         }
 
         // Delete Products
@@ -208,42 +243,66 @@ namespace PMS.Controllers
         public IActionResult Delete(int? id)
         {
             var obj = _db.Projects.FirstOrDefault(u => u.Id == id);
-
+            if (obj == null)
+            {
+                return NotFound();
+            }
             _db.Projects.Remove(obj);
+            _db.SaveChanges();
+
+            return Json(new { success = true });
+        }
+
+
+
+        [HttpDelete]
+        public IActionResult UnAssignEmployee(int id, int eId)
+        {
+            var obj = _db.ProjectEmployees.Where(u => u.ProjectId == id && u.EmployeeId == eId).ToList();
+            if(obj != null)
+            {
+                var obj1 = _db.ProjectEmployees.FirstOrDefault(u => u.ProjectId == id);
+                _db.ProjectEmployees.Remove(obj1);
+            }
+            else
+            {
+                return NotFound();
+            }
             _db.SaveChanges();
 
             return Json(new { success = true });
         }
         #endregion
 
-        //public IActionResult ExportExcel(IFormFileCollection form)
-        //{
-        //    List<Project> project = new List<Project>();
+        public IActionResult ExportExcel(IFormFileCollection form)
+        {
+            List<Project> project = new List<Project>();
 
-        //    // Change filepath Accondingly
-        //    var filePath = "C:\\Users\\Ashish.Kumar\\OneDrive - Pacific Global Solutions Ltd\\Desktop\\project.xlsx";
-        //    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-        //    using (var package = new ExcelPackage(new FileInfo(filePath)))
-        //    {
-        //        var worksheet = package.Workbook.Worksheets[1];
-        //        var rowcount = worksheet.Dimension.Rows;
-        //        var columncount = worksheet.Dimension.Columns;
-        //        for (int row = 2; row <= rowcount; row++)
-        //        {
-        //            project.Add(new Project
-        //            {
-        //                ProjectName = worksheet.Cells[row, 1].Value.ToString(),
-        //                ProjectDetail = worksheet.Cells[row, 2].Value.ToString(),
-        //                DeadlineDate = DateTime.Now,
-        //                ProjectManagerName = null
-        //            });
-        //        }
-        //    }
-        //    _db.Projects.AddRange(project);
-        //    _db.SaveChanges();
-        //    TempData["success"] = "Project Details Added Successfully.";
-        //    return RedirectToAction("Index");
+        // Change filepath Accondingly
+      
+        var filePath = "C:\\Users\\Ashish.Kumar\\Downloads\\Report\\project.xlsx";
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                var worksheet = package.Workbook.Worksheets[1];
+                var rowcount = worksheet.Dimension.Rows;
+                var columncount = worksheet.Dimension.Columns;
+                for (int row = 2; row <= rowcount; row++)
+                {
+                    project.Add(new Project
+                    {
+                        ProjectName = worksheet.Cells[row, 1].Value.ToString(),
+                        ProjectDetail = worksheet.Cells[row, 2].Value.ToString(),
+                        DeadlineDate = DateTime.Now,
+                        EmployeeID = int.Parse(worksheet.Cells[row, 3].Value.ToString())
+                    });
+                }
+            }
+            _db.Projects.AddRange(project);
+            _db.SaveChanges();
+            TempData["success"] = "Project Details Added Successfully.";
+            return RedirectToAction("Index");
 
-        //}
+        }
     }
 }
