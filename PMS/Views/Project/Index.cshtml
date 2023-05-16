@@ -15,20 +15,27 @@
 
 <div class="container">
     <div class="p-3">
-        <div class="row pt-3">
-            <div class="col-4">
-                <h2 class="text-dark"><b>Project Details</b></h2>
-            </div>
-            <div class="col-4">
+        <div class="col-12 row">
+            <h2 class="text-dark"><b>Project Details</b></h2>
+        </div>
+        <div class="row col-12 pt-3">
+            @*<div class="col-4">
+                <form method="post" asp-controller="Project" asp-action="ImportExcel" enctype="multipart/form-data" class="d-flex">
+                    <input type="file" name="FormFile" class="form-control" accept=".csv,.xls,.xlsx" />
+                    <input type="submit" class="btn btn-sm btn-primary" value="Upload" />
+                </form>
+            </div>*@
+            <div class="col-6">
                 <form method="get" asp-controller="Project" asp-action="Index" class="d-flex">
                     <input class="form-control me-sm-2" type="text" placeholder="Search by Project Name..." name="SearchString" value="@ViewBag.SearchStr">
                     <button class="btn btn-secondary my-2 my-sm-0 me-sm-2" type="submit">Search</button>
                 </form>
             </div>
-            <div class=" col-4 text-end">
+            <div class=" col-6 text-end">
                 <div>
-                    <a asp-controller="Project" asp-action="ExportExcel" class="btn btn-primary">
-                         Import Excel
+
+                     <a asp-controller="Project" asp-action="ImportExcel" class="btn btn-primary">
+                        Import Excel
                     </a>
                     <a asp-controller="Project" asp-action="Upsert" class="btn btn-primary">
                         <i class="bi bi-person-plus-fill"></i> &nbsp; Add Project

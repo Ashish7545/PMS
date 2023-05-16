@@ -274,7 +274,7 @@ namespace PMS.Controllers
         }
         #endregion
 
-        public IActionResult ExportExcel(IFormFileCollection form)
+        public IActionResult ImportExcel(IFormFileCollection form)
         {
             List<Project> project = new List<Project>();
 
