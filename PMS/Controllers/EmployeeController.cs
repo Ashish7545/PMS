@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClosedXML.Excel;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using OfficeOpenXml;
 using PMS.Data;
 using PMS.Models;
 using PMS.Pagging;
+using System.Data;
+using System.Reflection;
 
 namespace PMS.Controllers
 {
@@ -124,7 +127,7 @@ namespace PMS.Controllers
         }
         #endregion
 
-        public async Task<IActionResult> ExportExcel(IFormFileCollection form)
+        public async Task<IActionResult> ImportExcel(IFormFileCollection form)
         {
             List<Employee> emp = new List<Employee>();
 
@@ -151,6 +154,52 @@ namespace PMS.Controllers
             _db.SaveChanges();
             TempData["success"] = "Employee Details Added Successfully.";
             return RedirectToAction("Index");
+        }
+
+        public IActionResult ExportExcel()
+        {
+            try
+            {
+                var data = _db.Employees.ToList();
+                if (data != null && data.Count > 0)
+                {
+                    using (XLWorkbook wb = new XLWorkbook())
+                    {
+                        wb.Worksheets.Add(ToConvertDataTable(data.ToList()));
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            wb.SaveAs(ms);
+                            string fileName = $"Employees_{DateTime.Now.ToString("dd/MM/yyyy")}.xlsx";
+                            return File(ms.ToArray(), "application/vnd.openxmlformats-officedocuments.spreadsheetml.sheet", fileName);
+                        }
+                    }
+                }
+                TempData["error"] = "Data not Found!";
+            }
+            catch (Exception ex)
+            { }
+
+            return RedirectToAction("Index");
+        }
+
+        public DataTable ToConvertDataTable<T>(List<T> items)
+        {
+            DataTable dt = new DataTable(typeof(T).Name);
+            PropertyInfo[] properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (PropertyInfo prop in properties)
+            {
+                dt.Columns.Add(prop.Name);
+            }
+            foreach (T item in items)
+            {
+                var values = new object[properties.Length];
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    values[i] = properties[i].GetValue(item, null);
+                }
+                dt.Rows.Add(values);
+            }
+            return dt;
         }
     }
 }

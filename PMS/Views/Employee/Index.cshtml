@@ -14,20 +14,24 @@
 
 <div class="container">
     <div class="p-3">
-        <div class="row pt-3">
-            <div class="col-4">
-                <h2 class="text-dark"><b>Employee Details</b></h2>
-            </div>
-            <div class="col-4">
+        <div class="col-12 row">
+            <h2 class="text-dark"><b>Employee Details</b></h2>
+        </div>
+        <div class="row col-12 pt-3">
+           
+            <div class="col-6">
                 <form method="get" asp-controller="Employee" asp-action="Index" class="d-flex">
                     <input class="form-control me-sm-2" type="text" placeholder="Search by Employee Name..." name="SearchString" value="@ViewBag.SearchStr">
                     <button class="btn btn-secondary my-2 my-sm-0 me-sm-2" type="submit">Search</button>
                 </form>
             </div>
-            <div class=" col-4 text-end">
+            <div class=" col-6 text-end">
                 <div>
-                    <a asp-controller="Employee" asp-action="ExportExcel" class="btn btn-primary">
-                        <i class="bi bi-person-plus-fill"></i> &nbsp; Import Excel
+                    <a asp-controller="Employee" asp-action="ImportExcel" class="btn btn-primary">
+                        <i class="bi bi-cloud-arrow-up-fill"></i> &nbsp; Import Excel
+                    </a>
+                    <a asp-controller="Employee" asp-action="ExportExcel" class="btn btn-warning">
+                        <i class="bi bi-cloud-arrow-down-fill"></i> &nbsp; Export Excel
                     </a>
                     <a asp-controller="Employee" asp-action="Upsert" class="btn btn-primary">
                         <i class="bi bi-person-plus-fill"></i> &nbsp; Add Employee
