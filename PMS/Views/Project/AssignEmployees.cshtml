@@ -19,9 +19,10 @@
                 <hr />
                 <div class="col-12 mb-3">
                     <label asp-for="Developers" class="control-label">Developers</label>
-                    <select asp-for="Developers" asp-items="ViewBag.Developers" class="form-select" multiple>
-                        <option value="">--Select Developers--</option>
+                    <select asp-for="Developers" asp-items="ViewBag.Developers" class="form-select" id="developers" multiple>
+                        <option selected disabled>--Select Developers--</option>
                     </select>
+                    <span asp-validation-for="Developers" class="text-danger"></span>
                 </div>
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary" style="width:150px">Assign</button>
@@ -36,5 +37,6 @@
     @{
         <partial name="_ValidationScriptsPartial" />
     }
+
 }
 
