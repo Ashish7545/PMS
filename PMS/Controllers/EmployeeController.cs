@@ -83,7 +83,7 @@ namespace PMS.Controllers
             if (obj.Id == 0)
             {
                 _db.Employees.Add(obj);
-                TempData["success"] = "Product Added successfully";
+                TempData["success"] = "Employee Added successfully";
             }
             else
             {
@@ -97,7 +97,7 @@ namespace PMS.Controllers
                 else
                 {
                     _db.Employees.Update(obj);
-                    TempData["success"] = "Product Updated successfully";
+                    TempData["success"] = "Employee details updated successfully";
                 }
             }
             _db.SaveChanges();
@@ -127,6 +127,7 @@ namespace PMS.Controllers
         }
         #endregion
 
+        //Import Data to Excel
         public async Task<IActionResult> ImportExcel(IFormFileCollection form)
         {
             List<Employee> emp = new List<Employee>();
@@ -156,6 +157,7 @@ namespace PMS.Controllers
             return RedirectToAction("Index");
         }
 
+        //Export data to excel
         public IActionResult ExportExcel()
         {
             try

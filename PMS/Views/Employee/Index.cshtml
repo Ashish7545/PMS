@@ -132,13 +132,13 @@
                         success: function (data) {
                             if (data.success) {
                                 // Project deleted successfully, show success message
-                                Swal.fire("Deleted!", "Project Deleted Successfully!", "success");
+                                Swal.fire("Deleted!", "Employee Deleted Successfully!", "success");
                                 setTimeout(function () {
                                     window.location.href = '/Employee/Index';
                                 }, 1000);
                             } else {
                                 // Project deletion failed, show error message
-                                Swal.fire("Error!", "@TempData["error"]", "error");
+                                Swal.fire("Error!", "Assigned Employee can't be deleted!", "error");
                             }
                         }
                     })

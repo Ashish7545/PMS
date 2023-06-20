@@ -92,12 +92,12 @@ namespace PMS.Controllers
             };
             if (id == null || id == 0)
             {
-                //create product
+                //create project
                 return View(project);
             }
             else
             {
-                //update product
+                //update project
                 project.Projects = _db.Projects.FirstOrDefault(u => u.Id == id);
                 return View(project);
             }
@@ -109,12 +109,12 @@ namespace PMS.Controllers
             if (obj.Id == 0)
             {
                 _db.Projects.Add(obj.Projects);
-                TempData["success"] = "Product Added successfully";
+                TempData["success"] = "Project Added successfully";
             }
             else
             {
                 _db.Projects.Update(obj.Projects);
-                TempData["success"] = "Product Updated successfully";
+                TempData["success"] = "Project Updated successfully";
             }
             _db.SaveChanges();
 
@@ -240,18 +240,23 @@ namespace PMS.Controllers
             return View(data);
         }
 
-        // Delete Products
+        // Delete Projects
         #region API CALLS
         [HttpDelete]
         public IActionResult Delete(int? id)
         {
             var obj = _db.Projects.FirstOrDefault(u => u.Id == id);
-            if (obj == null)
+            var obj1 = _db.ProjectEmployees.FirstOrDefault(u => u.ProjectId == id);
+            if (obj1 != null)
             {
-                return NotFound();
+                TempData["error"] = "Unassigned Employee Then Delete the project!";
+                return RedirectToAction("Index");
             }
-            _db.Projects.Remove(obj);
-            _db.SaveChanges();
+            else
+            {
+                _db.Projects.Remove(obj);
+                _db.SaveChanges();
+            }
 
             return Json(new { success = true });
         }
@@ -277,6 +282,7 @@ namespace PMS.Controllers
         }
         #endregion
 
+        //Import Data to Excel
         public IActionResult ImportExcel(IFormFileCollection form)
         {
             List<Project> project = new List<Project>();
@@ -308,6 +314,7 @@ namespace PMS.Controllers
 
         }
 
+        //Export data to excel
         public IActionResult ExportExcel()
         {
             try

@@ -69,7 +69,7 @@
                     <td>@obj.DeadlineDate</td>
                     <td>@obj.NoOfEmployee</td>
                     <td><a asp-action="ListOfEmployee" asp-route-id="@obj.Id">Employee</a></td>
-                    <td>@obj.ProjectManagerName</td>
+                    <td><a asp-controller="Employee" asp-action="Index" asp-route-searchString="@obj.ProjectManagerName">@obj.ProjectManagerName</a></td>
                     <td>
                         <div class="w-60 btn-group" role="group">
                             <a asp-area="" asp-controller="Project" asp-action="Upsert" asp-route-id="@obj.Id"
@@ -152,7 +152,7 @@
                                 }, 1000);
                             } else {
                                 // Project deletion failed, show error message
-                                Swal.fire("Error!", "@TempData["error"]", "error");
+                                Swal.fire("Error!", "Unassigned Employee Then Delete the project!", "error");
                             }
                         }
                     })
