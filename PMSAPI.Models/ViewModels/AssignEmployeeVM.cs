@@ -1,11 +1,14 @@
 ﻿
+using PMSAPI.Models.Models;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace PMSAPI.Models.ViewModels
 {
     public class AssignEmployeeVM
     {
         public int ProjectId { get; set; }
         public string ProjectName { get; set; }
-        public List<string>? Developers { get; set; }
+        public List<ProjectEmployee>? Developers { get; set; }
 
         public int EmployeeId { get; set; }
         public string EmployeeName { get; set; }

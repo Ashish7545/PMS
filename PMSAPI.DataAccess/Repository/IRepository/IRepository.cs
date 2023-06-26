@@ -15,14 +15,32 @@ namespace PMSAPI.DataAccess.Repository.IRepository
         public IEnumerable<ProjectVM> GetAllProject();
 
         Task<Project> GetProjectById(int projectId);
+        Task<Project> GetProjectByEId(int employeeId);
 
         Task<Project> AddProject(Project projectDetails);
         Task UpdateProject(Project project);
 
+        Task DeleteProject(Project obj);
+
 
         // Employee
 
-        Task <Employee> GetEmployeeById(int employeeId);
+        public IEnumerable<Employee> GetAllEmployee();
+        Task<Employee> GetEmployeeById(int employeeId);
+        Task<Employee> GetDeveloper(int employeeId);
+        Task<Employee> AddEmployee(Employee employee);
+        Task UpdateEmployee(Employee employee);
+        public IEnumerable<AssignEmployeeVM> ListOfEmployee(int id);
+        Task DeleteEmployees(Employee obj);
+
+
+        // Project_Employee
+
+        Task<ProjectEmployee> GetDetailsByEId(int employeeId);
+        Task<ProjectEmployee> GetDetailsByPId(int projectId);
+        Task<ProjectEmployee> GetProjectEmployee(int employeeId, int projectId);
+        Task<ProjectEmployee> AddProjectEmployee(ProjectEmployee proEmpDetails);
+        Task UnAssignedEmployee(ProjectEmployee obj);
 
     }
 }

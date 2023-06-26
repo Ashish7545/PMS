@@ -21,15 +21,15 @@ namespace PMS.Controllers
         }
         public IActionResult Index(string? searchString, string sortOrder, int pg = 1)
         {
-            var projectDetails = new List<Employee>();
+            var employeeDetails = new List<Employee>();
             if (searchString == null)
             {
-                projectDetails = _db.Employees.ToList();
+                employeeDetails = _db.Employees.ToList();
             }
             else
             {
                 ViewBag.SearchStr = searchString;
-                projectDetails = _db.Employees.Where(u => u.Name.ToLower().Contains(searchString.ToLower())).ToList();
+                employeeDetails = _db.Employees.Where(u => u.Name.ToLower().Contains(searchString.ToLower())).ToList();
             }
 
             //Sorting
@@ -37,10 +37,10 @@ namespace PMS.Controllers
             switch (sortOrder)
             {
                 case "name_desc":
-                    projectDetails = projectDetails.OrderByDescending(a => a.Name).ToList();
+                    employeeDetails = employeeDetails.OrderByDescending(a => a.Name).ToList();
                     break;
                 default:
-                    projectDetails = projectDetails.OrderBy(a => a.Name).ToList();
+                    employeeDetails = employeeDetails.OrderBy(a => a.Name).ToList();
                     break;
             }
 
@@ -48,10 +48,10 @@ namespace PMS.Controllers
             const int pageSize = 3;
             if (pg < 1)
                 pg = 1;
-            int recsCount = projectDetails.Count;
+            int recsCount = employeeDetails.Count;
             var pager = new Pager(recsCount, pg, pageSize);
             int recSkip = (pg - 1) * pageSize;
-            var data = projectDetails.Skip(recSkip).Take(pager.PageSize).ToList();
+            var data = employeeDetails.Skip(recSkip).Take(pager.PageSize).ToList();
             ViewBag.Pager = pager;
 
             return View(data);
