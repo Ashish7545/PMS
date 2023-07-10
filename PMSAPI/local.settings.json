@@ -3,6 +3,6 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-    "DefaultConnection": "Server=localhost;Database=pmsDatabase;User=root;Password=;"
+    "DefaultConnection": "Server=localhost;Database=projectManagement;User=root;Password=;"
   }
 }
